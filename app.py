@@ -2,6 +2,9 @@ from flask import Flask, Response, redirect, render_template, request, jsonify, 
 import json
 from pathlib import Path
 
+from CF import NeuMF, predicted_rating_items
+from CBF import preprocess_text, TFIDFModel, load_model, convert_tfidf_to_array, cosine_similarity_items
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import joblib
@@ -10,9 +13,6 @@ import pickle
 from pathlib import Path
 import torch
 import numpy as np
-
-from CF import NeuMF, predicted_rating_items
-from CBF import preprocess_text, TFIDFModel, load_model, convert_tfidf_to_array, cosine_similarity_items
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
