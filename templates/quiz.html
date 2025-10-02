@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlowSkin with SkincareAI</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body class="bg-orange-50 min-h-screen">
+    <div id="navbarRoot"></div>
+    <div id="loginModalRoot"></div>
+
+    <main class="pt-20 min-h-[80vh]">
+      <section class="container mx-auto px-6 py-16">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <div id="welcomeMessage" class="space-y-2"></div>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4" id="quizTitle">
+              Personalized Analysis Quiz
+            </h2>
+            <p class="text-xl text-gray-600">
+              Help our system understand your needs so it can recommend the
+              right products for you.
+            </p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mb-12">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-sm font-medium text-gray-700">Progress</span>
+              <span id="stepCounter" class="text-sm text-gray-500">1 of 8</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+              <div
+                class="progress-bar bg-gradient-to-r from-orange-400 to-orange-600 h-3 rounded-full"
+                style="width: 12.5%"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Question Container -->
+          <div
+            id="questionContainer"
+            class="bg-white rounded-2xl p-8 shadow-lg mb-8"
+          ></div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between">
+            <button
+              id="prevBtn"
+              class="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:border-orange-300 hover:text-orange-600 transition font-medium"
+            >
+              Previous
+            </button>
+            <button
+              id="nextBtn"
+              class="px-8 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold shadow-lg"
+            >
+              Next Question
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footerRoot"></div>
+
+    <script
+      defer
+      src="{{ url_for('static', filename='js/products.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='js/navigation.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

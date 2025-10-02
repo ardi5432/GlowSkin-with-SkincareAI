@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlowSkin with SkincareAI</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body class="bg-orange-50 min-h-screen">
+    <!-- same mounts seperti halaman lain -->
+    <div id="navbarRoot"></div>
+    <div id="loginModalRoot"></div>
+
+    <main class="py-20 min-h-[80vh]">
+      <!-- HERO mini (serasi) -->
+      <section class="gradient-bg pt-16 px-6">
+        <div class="container mx-auto text-center">
+          <span
+            class="inline-block bg-orange-100 text-orange-800 px-4 py-1 rounded-full text-sm font-medium"
+          >
+            👥 User Management
+          </span>
+          <h1
+            class="text-4xl md:text-5xl font-bold text-gray-800 hero-text mt-4 leading-tight"
+          >
+            All <span class="text-orange-500">Registered Users</span>
+          </h1>
+          <p class="text-lg text-gray-600 mt-3 max-w-2xl mx-auto">
+            Search, sort, and explore users registered in our system.
+          </p>
+        </div>
+      </section>
+
+      <!-- CONTENT -->
+      <section class="pt-12 px-6">
+        <div class="container mx-auto max-w-6xl">
+          <!-- toolbar -->
+          <div
+            class="bg-white rounded-2xl shadow-lg border border-orange-100 p-6 md:p-8"
+          >
+            <div
+              class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+            >
+              <div class="flex items-center gap-3">
+                <input
+                  id="searchInput"
+                  type="text"
+                  placeholder="Cari username…"
+                  class="w-64 rounded-full border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-500"
+                />
+                <select
+                  id="pageSize"
+                  class="rounded-full border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-500"
+                >
+                  <option value="5">5 / page</option>
+                  <option value="10" selected>10 / page</option>
+                  <option value="25">25 / page</option>
+                </select>
+              </div>
+
+              <div class="text-sm text-gray-600">
+                <!-- <span id="summary">—</span> -->
+              </div>
+            </div>
+
+            <!-- table -->
+            <div class="mt-6 overflow-x-auto rounded-xl border border-gray-200">
+              <table class="min-w-full text-sm">
+                <thead class="bg-orange-50/70 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-3 text-left w-24">No</th>
+                    <th class="px-4 py-3 text-left">
+                      <button
+                        id="sortUsername"
+                        class="inline-flex items-center gap-1 font-medium hover:text-orange-600"
+                      >
+                        Username
+                        <span id="sortIcon" class="text-gray-400">↕</span>
+                      </button>
+                    </th>
+                    <th class="px-4 py-3 text-left">Login Time</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="userTableBody"
+                  class="divide-y divide-gray-100 text-gray-800 bg-white"
+                >
+                  <!-- rows injected by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- pagination -->
+            <div class="mt-5 flex items-center justify-between">
+              <p class="text-sm text-gray-600">
+                Page <span id="pageInfo">—</span>
+              </p>
+              <div class="flex items-center gap-2">
+                <button
+                  id="prevBtn"
+                  class="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Prev
+                </button>
+                <button
+                  id="nextBtn"
+                  class="px-4 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            <p
+              id="errorBox"
+              class="hidden mt-4 p-3 rounded-xl bg-red-50 text-red-700 text-sm"
+            ></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footerRoot"></div>
+
+    <!-- scripts -->
+    <script
+      defer
+      src="{{ url_for('static', filename='js/user-list.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='js/navigation.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

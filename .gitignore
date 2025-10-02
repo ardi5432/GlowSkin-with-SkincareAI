@@ -1,0 +1,8 @@
+__pycache__
+node_modules
+src
+venv
+package-lock.json
+package.json
+readme.txt
+web.rar
