@@ -142,4 +142,4 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
