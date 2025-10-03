@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from CF import NeuMF, predicted_rating_items
-from CBF import preprocess_text, convert_tfidf_to_array, cosine_similarity_items
+from CBF import preprocess_text, TFIDFModel, convert_tfidf_to_array, cosine_similarity_items
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -13,6 +13,9 @@ import pickle
 from pathlib import Path
 import torch
 import numpy as np
+
+import __main__
+setattr(__main__, "TFIDFModel", TFIDFModel)
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
