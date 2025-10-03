@@ -4,7 +4,6 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-import joblib
 import os
 import pandas as pd
 
@@ -53,17 +52,6 @@ def preprocess_text(text):
 # ======== TF-IDF Model ========
 import numpy as np
 import math
-
-def save_model(tfidf_model, filename="tfidf_model.pkl"):
-	joblib.dump(tfidf_model, filename)
-	print(f"Model saved to {filename}")
-
-def load_model(filename="tfidf_model.pkl"):
-	if os.path.exists(filename):
-		return joblib.load(filename)
-	else:
-		print(f"Model file {filename} tidak ditemukan!")
-		return None
 
 def convert_tfidf_to_array(tfidf_dict, vocabulary):
 	tfidf_array = [tfidf_dict.get(term, 0) for term in vocabulary]
