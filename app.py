@@ -19,53 +19,6 @@ setattr(__main__, "TFIDFModel", TFIDFModel)
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
-def load_pickle(filename):
-    if not filename.endswith('.pkl'):
-        filename += '.pkl'
-    
-    try:
-        with open(filename, 'rb', buffering=65536) as f:
-            variable = pickle.load(f)
-        return variable
-        
-    except Exception as e:
-        print(f"❌ Error loading: {e}")
-        return None
-
-def load_model(filename):
-	if os.path.exists(filename):
-		return joblib.load(filename)
-	else:
-		print(f"Model file {filename} tidak ditemukan!")
-		return None
-
-user2user_encoded = load_pickle("models/user2user_encoded")
-user_encoded2user = load_pickle("models/user_encoded2user")
-
-item2item_encoded = load_pickle("models/item2item_encoded")
-item_encoded2item = load_pickle("models/item_encoded2item")
-
-# =================== CF ===================
-num_users = len(user2user_encoded)
-num_items = len(item2item_encoded)
-embedding_size = 16
-hidden_layer_size = [32, 16, 8]
-NEUMF_MODEL_PATH = "models/neumf_model.pth"
-if os.path.exists(NEUMF_MODEL_PATH):
-    neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
-    neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
-    neumf_model_new.eval()
-
-# =================== CBF ===================
-TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
-if os.path.exists(TFIDF_MODEL_PATH):
-    loaded_model = load_model(TFIDF_MODEL_PATH)
-    model_tfidf = loaded_model.tfidf_dict
-    vocabulary = loaded_model.vocabulary
-    titles = loaded_model.titles.values
-    id_item = loaded_model.id_item.values
-    model_tfidf_array = np.array([convert_tfidf_to_array(tf, vocabulary) for tf in model_tfidf])
-
 # ================== ROUTES ==================
 @app.route("/")
 def index():
@@ -150,7 +103,57 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
     recommendations = sorted(weighted_result, key=lambda x: x['weighted_score'], reverse=True)
     return recommendations
 
+def load_pickle(filename):
+    if not filename.endswith('.pkl'):
+        filename += '.pkl'
+    
+    try:
+        with open(filename, 'rb', buffering=65536) as f:
+            variable = pickle.load(f)
+        return variable
+        
+    except Exception as e:
+        print(f"❌ Error loading: {e}")
+        return None
+
+def load_model(filename):
+	if os.path.exists(filename):
+		return joblib.load(filename)
+	else:
+		print(f"Model file {filename} tidak ditemukan!")
+		return None
+
+
+def heavy_init():
+	user2user_encoded = load_pickle("models/user2user_encoded")
+	user_encoded2user = load_pickle("models/user_encoded2user")
+	
+	item2item_encoded = load_pickle("models/item2item_encoded")
+	item_encoded2item = load_pickle("models/item_encoded2item")
+	
+	# =================== CF ===================
+	num_users = len(user2user_encoded)
+	num_items = len(item2item_encoded)
+	embedding_size = 16
+	hidden_layer_size = [32, 16, 8]
+	NEUMF_MODEL_PATH = "models/neumf_model.pth"
+	if os.path.exists(NEUMF_MODEL_PATH):
+	    neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
+	    neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
+	    neumf_model_new.eval()
+	
+	# =================== CBF ===================
+	TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
+	if os.path.exists(TFIDF_MODEL_PATH):
+	    loaded_model = load_model(TFIDF_MODEL_PATH)
+	    model_tfidf = loaded_model.tfidf_dict
+	    vocabulary = loaded_model.vocabulary
+	    titles = loaded_model.titles.values
+	    id_item = loaded_model.id_item.values
+	    model_tfidf_array = np.array([convert_tfidf_to_array(tf, vocabulary) for tf in model_tfidf])
+    pass
 
 if __name__ == "__main__":
+    threading.Thread(target=heavy_init, daemon=True).start()
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False, threaded=True)
