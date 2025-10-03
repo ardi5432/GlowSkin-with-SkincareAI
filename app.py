@@ -29,6 +29,13 @@ def load_pickle(filename):
         print(f"❌ Error loading: {e}")
         return None
 
+def load_model(filename):
+	if os.path.exists(filename):
+		return joblib.load(filename)
+	else:
+		print(f"Model file {filename} tidak ditemukan!")
+		return None
+
 user2user_encoded = load_pickle("models/user2user_encoded")
 user_encoded2user = load_pickle("models/user_encoded2user")
 
@@ -49,7 +56,7 @@ if os.path.exists(NEUMF_MODEL_PATH):
 # =================== CBF ===================
 TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
 if os.path.exists(TFIDF_MODEL_PATH):
-    loaded_model = load_pickle(TFIDF_MODEL_PATH)
+    loaded_model = load_model(TFIDF_MODEL_PATH)
     model_tfidf = loaded_model.tfidf_dict
     vocabulary = loaded_model.vocabulary
     titles = loaded_model.titles.values
