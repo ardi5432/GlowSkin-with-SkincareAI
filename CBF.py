@@ -7,21 +7,6 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import os
 import pandas as pd
 
-try:
-	nltk.data.find('tokenizers/punkt')
-except LookupError:
-	nltk.download('punkt')
-
-try:
-	nltk.data.find('corpora/stopwords')
-except LookupError:
-	nltk.download('stopwords')
-
-try:
-	nltk.data.find('tokenizers/punkt_tab')
-except LookupError:
-	nltk.download('punkt_tab')
-
 def merge_negations(tokens):
 	negation_words = {'tidak', 'bukan', 'tanpa'}
 	merged = []
