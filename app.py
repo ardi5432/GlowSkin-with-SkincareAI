@@ -125,35 +125,53 @@ def load_model(filename):
 
 
 def heavy_init():
-	user2user_encoded = load_pickle("models/user2user_encoded")
-	user_encoded2user = load_pickle("models/user_encoded2user")
-	
-	item2item_encoded = load_pickle("models/item2item_encoded")
-	item_encoded2item = load_pickle("models/item_encoded2item")
-	
-	# =================== CF ===================
-	num_users = len(user2user_encoded)
-	num_items = len(item2item_encoded)
-	embedding_size = 16
-	hidden_layer_size = [32, 16, 8]
-	NEUMF_MODEL_PATH = "models/neumf_model.pth"
-	if os.path.exists(NEUMF_MODEL_PATH):
-	    neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
-	    neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
-	    neumf_model_new.eval()
-	
-	# =================== CBF ===================
-	TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
-	if os.path.exists(TFIDF_MODEL_PATH):
-	    loaded_model = load_model(TFIDF_MODEL_PATH)
-	    model_tfidf = loaded_model.tfidf_dict
-	    vocabulary = loaded_model.vocabulary
-	    titles = loaded_model.titles.values
-	    id_item = loaded_model.id_item.values
-	    model_tfidf_array = np.array([convert_tfidf_to_array(tf, vocabulary) for tf in model_tfidf])
-    pass
+	"""Load resources besar tanpa memblokir startup server."""
+	try:
+		# jadikan global bila dipakai di endpoint
+		global user2user_encoded, user_encoded2user
+		global item2item_encoded, item_encoded2item
+		global neumf_model_new
+		global model_tfidf, vocabulary, titles, id_item, model_tfidf_array
+
+		user2user_encoded = load_pickle("models/user2user_encoded")
+		user_encoded2user = load_pickle("models/user_encoded2user")
+
+		item2item_encoded = load_pickle("models/item2item_encoded")
+		item_encoded2item = load_pickle("models/item_encoded2item")
+
+		# =================== CF ===================
+		num_users = len(user2user_encoded)
+		num_items = len(item2item_encoded)
+		embedding_size = 16
+		hidden_layer_size = [32, 16, 8]
+		NEUMF_MODEL_PATH = "models/neumf_model.pth"
+
+		if os.path.exists(NEUMF_MODEL_PATH):
+			neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
+			neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location="cpu"))
+			neumf_model_new.eval()
+
+		# =================== CBF ===================
+		TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
+		if os.path.exists(TFIDF_MODEL_PATH):
+			loaded_model = load_model(TFIDF_MODEL_PATH)
+			model_tfidf = loaded_model.tfidf_dict
+			vocabulary = loaded_model.vocabulary
+			titles = loaded_model.titles.values
+			id_item = loaded_model.id_item.values
+			model_tfidf_array = np.array([convert_tfidf_to_array(tf, vocabulary) for tf in model_tfidf])
+
+		app.logger.info("Heavy init finished successfully.")
+
+	except Exception as e:
+		# Jangan biarkan thread mati diam-diam — log supaya kelihatan di Render logs
+		import traceback
+		app.logger.error("Heavy init failed: %s\n%s", e, traceback.format_exc())
+
 
 if __name__ == "__main__":
-    threading.Thread(target=heavy_init, daemon=True).start()
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False, threaded=True)
+	import threading
+	t = threading.Thread(target=heavy_init, daemon=True)
+	t.start()
+	port = int(os.environ.get("PORT", 10000))
+	app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False, threaded=True)
