@@ -62,7 +62,7 @@ function attachAuthHandlers() {
       if (!username || !password) return;
 
       try {
-        const data = await fetch("./static/data/accounts.json", {
+        const data = await fetch("./static/data/accounts2.json", {
           cache: "no-store",
         });
         const accounts = await data.json();
