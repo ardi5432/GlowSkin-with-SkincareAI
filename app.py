@@ -2,7 +2,7 @@ from flask import Flask, Response, redirect, render_template, request, jsonify, 
 import json
 from pathlib import Path
 
-from CF import NeuMF, predicted_rating_items
+# from CF import NeuMF, predicted_rating_items
 from CBF import preprocess_text, TFIDFModel, convert_tfidf_to_array, cosine_similarity_items
 
 import pandas as pd
@@ -11,7 +11,7 @@ import joblib
 import os
 import pickle
 from pathlib import Path
-import torch
+# import torch
 import numpy as np
 
 import __main__
@@ -89,15 +89,15 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 	item_encoded2item = load_pickle("models/item_encoded2item")
 	
 	# =================== CF ===================
-	num_users = len(user2user_encoded)
-	num_items = len(item2item_encoded)
-	embedding_size = 16
-	hidden_layer_size = [32, 16, 8]
-	NEUMF_MODEL_PATH = "models/neumf_model.pth"
-	if os.path.exists(NEUMF_MODEL_PATH):
-		neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
-		neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
-		neumf_model_new.eval()
+	# num_users = len(user2user_encoded)
+	# num_items = len(item2item_encoded)
+	# embedding_size = 16
+	# hidden_layer_size = [32, 16, 8]
+	# NEUMF_MODEL_PATH = "models/neumf_model.pth"
+	# if os.path.exists(NEUMF_MODEL_PATH):
+	# 	neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
+	# 	neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
+	# 	neumf_model_new.eval()
 	
 	# =================== CBF ===================
 	TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
@@ -114,9 +114,10 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 	cbf_similarity = np.array([item['similarity'] for item in cbf_result])
 	if id_user != None and id_user != "guest" and id_user in list(user2user_encoded.keys()):
 		# =================== CF ===================
-		cf_result = predicted_rating_items(id_user, neumf_model_new, user2user_encoded, item_encoded2item)
-		cf_predicted_rating = np.array([item['predicted_rating'] for item in cf_result])
-		weighted_scores = (1-alpha) * cf_predicted_rating + alpha * cbf_similarity
+		# cf_result = predicted_rating_items(id_user, neumf_model_new, user2user_encoded, item_encoded2item)
+		# cf_predicted_rating = np.array([item['predicted_rating'] for item in cf_result])
+		# weighted_scores = (1-alpha) * cf_predicted_rating + alpha * cbf_similarity
+		weighted_scores = cbf_similarity.copy()
 	else:
 		weighted_scores = cbf_similarity.copy()
 
