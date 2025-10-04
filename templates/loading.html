@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlowSkin with SkincareAI</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body class="bg-orange-50 min-h-screen">
+    <div id="navbarRoot"></div>
+    <div id="loginModalRoot"></div>
+
+    <main class="pt-20 min-h-[80vh]">
+      <section class="container mx-auto px-6 py-16">
+        <div class="max-w-6xl mx-auto">
+          <!-- Loading State -->
+          <div id="loadingSpinner" class="text-center py-20">
+            <div
+              class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mb-8"
+            ></div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">
+              Analyzing Your Responses...
+            </h2>
+            <p class="text-xl text-gray-600">
+              Our AI is creating your personalized product skincare
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footerRoot"></div>
+
+    <script
+      defer
+      src="{{ url_for('static', filename='js/products.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='js/navigation.js') }}"
+    ></script>
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>
