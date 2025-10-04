@@ -3,7 +3,6 @@ pandas
 scikit-learn
 joblib
 numpy
-torch
 nltk 
 sastrawi
 gunicorn
