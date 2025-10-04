@@ -116,7 +116,7 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 		# =================== CF ===================
 		# cf_result = predicted_rating_items(id_user, neumf_model_new, user2user_encoded, item_encoded2item)
 		# cf_predicted_rating = np.array([item['predicted_rating'] for item in cf_result])
-		with open("static/data/cf_result", "r", encoding="utf-8") as f:
+		with open("static/data/cf_result.json", "r", encoding="utf-8") as f:
 			cf_result = json.load(f)
 		cf_predicted_rating = np.array(list(cf_result[str(id_user)].values()))
 		weighted_scores = (1-alpha) * cf_predicted_rating + alpha * cbf_similarity
