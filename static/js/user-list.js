@@ -1,6 +1,6 @@
 // ===== config =====
 // bisa diganti ke endpoint API-mu. Atau set data-source via data-attr: <body data-users-url="/api/users">
-const USERS_URL_DEFAULT = "/static/data/accounts.json";
+const USERS_URL_DEFAULT = "/static/data/accounts2.json";
 
 // ===== state =====
 let rawUsers = [];
