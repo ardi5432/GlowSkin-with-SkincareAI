@@ -98,6 +98,8 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 	# 	neumf_model_new = NeuMF(num_users, num_items, embedding_size, hidden_layer_size)
 	# 	neumf_model_new.load_state_dict(torch.load(NEUMF_MODEL_PATH, map_location='cpu'))
 	# 	neumf_model_new.eval()
+	with open("static/data/cf_result", "r", encoding="utf-8") as f:
+		cf_result = json.load(f)
 	
 	# =================== CBF ===================
 	TFIDF_MODEL_PATH = "models/tfidf_model.pkl"
@@ -116,8 +118,9 @@ def run_hybrid_recommendation(id_user, preferences, alpha=0.9):
 		# =================== CF ===================
 		# cf_result = predicted_rating_items(id_user, neumf_model_new, user2user_encoded, item_encoded2item)
 		# cf_predicted_rating = np.array([item['predicted_rating'] for item in cf_result])
-		# weighted_scores = (1-alpha) * cf_predicted_rating + alpha * cbf_similarity
-		weighted_scores = cbf_similarity.copy()
+		cf_predicted_rating = np.array(list(cf_result[str(id_user)].values()))
+		weighted_scores = (1-alpha) * cf_predicted_rating + alpha * cbf_similarity
+		# weighted_scores = cbf_similarity.copy()
 	else:
 		weighted_scores = cbf_similarity.copy()
 
