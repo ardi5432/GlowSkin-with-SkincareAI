@@ -110,11 +110,6 @@ const questions = [
 ];
 
 function updateProgressBar() {
-  if (sessionStorage.getItem("item_recommendations")) {
-    window.location.href = "/result";
-    return;
-  }
-
   const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
   const bar = document.querySelector(".progress-bar");
   const counter = document.getElementById("stepCounter");
@@ -239,7 +234,8 @@ function collectAndNext() {
     renderQuestion();
   } else {
     sessionStorage.setItem("userPreferences", JSON.stringify(userPreferences));
-    sendQuiz();
+    // sendQuiz();
+    window.location.href = "/loading";
   }
 }
 
@@ -311,6 +307,12 @@ function mountQuizPage() {
   const nextBtn = document.getElementById("nextBtn");
   const prevBtn = document.getElementById("prevBtn");
   if (!nextBtn || !prevBtn) return;
+
+  if (sessionStorage.getItem("item_recommendations")) {
+    window.location.href = "/result";
+    return;
+  }
+
   currentStep = 0;
   userPreferences = {};
   updateProgressBar();
@@ -320,13 +322,10 @@ function mountQuizPage() {
 }
 
 function mountResultPage() {
-  const spinner = document.getElementById("loadingSpinner");
-  const results = document.getElementById("recommendationResults");
-  const container = document.getElementById("itemContainer");
   const item_recommendations =
     JSON.parse(sessionStorage.getItem("item_recommendations")) || [];
 
-  if (!spinner || !results || !container || !item_recommendations) return;
+  if (!item_recommendations) return;
 
   // Daftar item yang direkomendasikan
   let id_items = [];
@@ -345,13 +344,15 @@ function mountResultPage() {
     (p) => !id_items.includes(p.id_item)
   );
 
-  spinner.classList.remove("hidden");
-  results.classList.add("hidden");
+  // const spinner = document.getElementById("loadingSpinner");
+  // const results = document.getElementById("recommendationResults");
+  const container = document.getElementById("itemContainer");
+  // if (!spinner || !results || !container) return;
+  // spinner.classList.add("hidden");
+  // results.classList.remove("hidden");
 
   // Simulate processing
   setTimeout(() => {
-    spinner.classList.add("hidden");
-    results.classList.remove("hidden");
     container.innerHTML = `
       <div class="space-y-8">
         <div class="bg-white rounded-2xl p-8 shadow-lg">
@@ -406,7 +407,7 @@ function mountResultPage() {
         </div>
       </div>`;
     applyTopN(container, list_recommendations);
-  }, 1500);
+  }, 200);
 }
 
 // bikin function untuk nampilin nama user di quiz page
@@ -484,4 +485,14 @@ function applyTopN(containerEl, items) {
 
   topNEl.addEventListener("change", render);
   render();
+}
+
+// jika  sekarang di halaman loading maka arahkan ke quiz() dan sudah ada session storage userPreferences
+if (
+  document.getElementById("loadingSpinner") &&
+  sessionStorage.getItem("userPreferences")
+) {
+  setTimeout(() => {
+    sendQuiz();
+  }, 5000);
 }
