@@ -42,7 +42,7 @@ def quiz():
 
 @app.route("/loading")
 def loading():
-    return render_template("loading.html", page="loading")
+	return render_template("loading.html", page="loading")
 
 @app.route("/result")
 def result():
