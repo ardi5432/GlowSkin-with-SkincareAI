@@ -40,6 +40,10 @@ def about():
 def quiz():
 	return render_template("quiz.html", page="quiz")
 
+@app.route("/loading")
+def loading():
+    return render_template("loading.html", page="loading")
+
 @app.route("/result")
 def result():
 	return render_template("result.html", page="result")
